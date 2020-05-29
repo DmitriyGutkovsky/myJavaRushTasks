@@ -1,0 +1,4 @@
+Hello Word!
+Dima
+I love Java
+22
