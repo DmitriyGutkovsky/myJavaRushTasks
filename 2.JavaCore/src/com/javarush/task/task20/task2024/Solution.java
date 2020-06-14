@@ -11,6 +11,7 @@ public class Solution implements Serializable {
     int node;
     List<Solution> edges = new LinkedList<>();
 
+
     public static void main(String[] args) {
 
     }
