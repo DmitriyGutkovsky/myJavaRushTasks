@@ -14,6 +14,7 @@ public class Solution {
     }
 
     public static byte[] getNetAddress(byte[] ip, byte[] mask) {
+        byte[] temp = new byte[ip.length];
         return new byte[4];
     }
 
