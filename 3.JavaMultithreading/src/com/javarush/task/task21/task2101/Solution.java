@@ -14,10 +14,21 @@ public class Solution {
     }
 
     public static byte[] getNetAddress(byte[] ip, byte[] mask) {
-        byte[] temp = new byte[ip.length];
-        return new byte[4];
+        byte[] netAddress = new byte[4];
+        for (int i = 0; i < netAddress.length; i++) {
+            netAddress[i] = (byte) (ip[i] & mask[i]);
+        }
+        return netAddress;
     }
 
     public static void print(byte[] bytes) {
+
+        for (byte element : bytes) {
+            int a = element & 255;
+            String printElement = Integer.toString(a, 2);
+            System.out.print(String.format("%8s",printElement).replaceAll(" ", "0") + " ");
+        }
+        System.out.println();
+
     }
 }
