@@ -1,6 +1,7 @@
 package com.javarush.task.task21.task2105;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /* 
@@ -27,7 +28,7 @@ public class Solution {
 
     @Override
     public int hashCode() {
-        return 1;
+        return Objects.hash(first, last);
     }
 
     public static void main(String[] args) {
