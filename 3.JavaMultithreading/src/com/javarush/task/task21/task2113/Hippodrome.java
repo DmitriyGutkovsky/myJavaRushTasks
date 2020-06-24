@@ -15,7 +15,7 @@ public class Hippodrome {
         this.horses = horses;
     }
 
-    void run() {
+    void run(){
         for (int i = 0; i < 100; i++) {
             move();
             print();
@@ -28,15 +28,16 @@ public class Hippodrome {
 
     }
 
-    void move() {
+    void move(){
         for (int i = 0; i < horses.size(); i++) {
             horses.get(i).move();
         }
 
 
+
     }
 
-    void print() {
+    void print(){
         for (Horse hors : horses) {
             hors.print();
         }
@@ -58,6 +59,9 @@ public class Hippodrome {
         game.horses.add(horse3);
 
         game.run();
+
+
+
 
     }
 }
