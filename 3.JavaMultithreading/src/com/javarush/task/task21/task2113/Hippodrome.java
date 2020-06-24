@@ -51,8 +51,8 @@ public class Hippodrome {
         game = new Hippodrome(new ArrayList<>());
 
         Horse horse1 = new Horse("One", 3, 0);
-        Horse horse2 = new Horse("One", 3, 0);
-        Horse horse3 = new Horse("One", 3, 0);
+        Horse horse2 = new Horse("Two", 3, 0);
+        Horse horse3 = new Horse("Three", 3, 0);
 
         game.horses.add(horse1);
         game.horses.add(horse2);
