@@ -29,12 +29,22 @@ public class Hippodrome {
     }
 
     void move(){
-        for (Horse hors : horses) {
-            hors.move();
+        for (int i = 0; i < horses.size(); i++) {
+            horses.get(i).move();
         }
+
+
+
     }
 
     void print(){
+        for (Horse hors : horses) {
+            hors.print();
+        }
+
+        for (int i = 0; i < 10; i++) {
+            System.out.println();
+        }
     }
 
     public static void main(String[] args) {
