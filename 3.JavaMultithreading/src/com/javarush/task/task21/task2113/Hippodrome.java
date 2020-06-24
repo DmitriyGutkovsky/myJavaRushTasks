@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Hippodrome {
-    private List<Horse> horses = new ArrayList<>();
+    private List<Horse> horses;
     static Hippodrome game;
 
     public List<Horse> getHorses() {
@@ -15,7 +15,7 @@ public class Hippodrome {
         this.horses = horses;
     }
 
-    void run(){
+    void run() {
         for (int i = 0; i < 100; i++) {
             move();
             print();
@@ -25,19 +25,15 @@ public class Hippodrome {
                 e.printStackTrace();
             }
         }
-
     }
 
-    void move(){
-        for (int i = 0; i < horses.size(); i++) {
-            horses.get(i).move();
+    void move() {
+        for (Horse hors : horses) {
+            hors.move();
         }
-
-
-
     }
 
-    void print(){
+    void print() {
         for (Horse hors : horses) {
             hors.print();
         }
@@ -59,7 +55,7 @@ public class Hippodrome {
         return horses.get(index);
     }
 
-    public void printWinner(){
+    public void printWinner() {
         System.out.printf("Winner is %s!\n", getWinner().name);
     }
 
@@ -76,8 +72,6 @@ public class Hippodrome {
 
         game.run();
 
-
-
-
+        game.printWinner();
     }
 }

@@ -35,11 +35,11 @@ public class Horse {
         return distance;
     }
 
-    public  void move(){
-        distance +=speed*Math.random();
+    public void move() {
+        distance += speed * Math.random();
     }
 
-    public  void print(){
+    public void print() {
         int quantityDots = (int) Math.floor(distance);
 
         for (int i = 0; i < quantityDots; i++) {
