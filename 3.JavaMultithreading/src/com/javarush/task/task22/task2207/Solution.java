@@ -17,36 +17,32 @@ public class Solution {
         try {
             fileName = reader.readLine();
 //            fileName = "D:\\Study\\Java\\JavaRush\\JavaRushTasks\\JavaRushTasks\\3.JavaMultithreading\\src\\com\\javarush\\task\\task22\\task2207\\test.txt";
-            try (BufferedReader fileReader = new BufferedReader(new FileReader(fileName))){
-                while (fileReader.ready()){
+            try (BufferedReader fileReader = new BufferedReader(new FileReader(fileName))) {
+                while (fileReader.ready()) {
                     String line = fileReader.readLine();
                     String[] splitLine = line.trim().split(" ");
 
                     // add all words from thr file into tempList
-                    for (int i = 0; i < splitLine.length; i++) {
-                        tempList.add(splitLine[i]);
-                    }
+                    Collections.addAll(tempList, splitLine);
                 }
 
-                Set<Pair> set = new LinkedHashSet<>();
-
-                for (int i = 0; i < tempList.size()-1; i++) {
-                    StringBuilder sb1 = new StringBuilder(tempList.get(i));
-                    StringBuilder reverse = sb1.reverse();
-                    for (int j = 1; j < tempList.size(); j++) {
-                        StringBuilder sb2 = new StringBuilder(tempList.get(j));
-                            if (reverse.toString().equals(sb2.toString())) {
-                            set.add(new Pair(sb1.toString(), sb2.toString()));
+                while (tempList.size() > 1) {
+                    String firstElement = tempList.get(0);
+                    tempList.remove(0);
+                    StringBuilder sb1 = new StringBuilder(firstElement);
+                    String secondElement = sb1.reverse().toString();
+                    for (int i = 0; i < tempList.size(); i++) {
+                        if (tempList.get(i).equals(secondElement)) {
+                            result.add(new Pair(firstElement, secondElement));
+                            tempList.remove(secondElement);
+                            break;
                         }
                     }
                 }
 
-                result.addAll(set);
-
                 for (Pair pair : result) {
                     System.out.println(pair);
                 }
-
             }
 
         } catch (IOException e) {
