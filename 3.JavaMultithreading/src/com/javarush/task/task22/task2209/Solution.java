@@ -48,18 +48,18 @@ public class Solution {
         }
 
         List<String> listsOfWords = new ArrayList<>(Arrays.asList(words));
+//        char c = listsOfWords.get(0).charAt(listsOfWords.get(0).length()-1);
+//        System.out.println(c);
 
         StringBuilder result = new StringBuilder(listsOfWords.remove(0));
 
         for (int i = 0; i < listsOfWords.size(); i++) {
-            if (result.charAt(0) == listsOfWords.get(i).charAt(listsOfWords.get(i).length())){
+            if (result.charAt(0) == listsOfWords.get(i).charAt(listsOfWords.get(i).length()-1)){
                 result.insert(0, listsOfWords.get(i) + " ");
             } else {
                 result.append(" ").append(listsOfWords.get(i));
             }
         }
-
-
 
         return result;
     }
