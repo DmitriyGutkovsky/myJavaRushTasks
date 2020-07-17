@@ -52,12 +52,18 @@ public class Room {
         Room room = new Room(20, 20, snake);
         game= room;
         snake.setDirection(SnakeDirection.DOWN);
+        game.createMouse();
+        game.run();
 
     }
     void run() {
     }
 
     void print(){
+    }
+
+    void sleep(){
+
     }
 
     void createMouse(){
