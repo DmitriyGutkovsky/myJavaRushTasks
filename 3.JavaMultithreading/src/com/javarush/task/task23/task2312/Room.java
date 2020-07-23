@@ -115,5 +115,26 @@ public class Room {
 
     public void sleep() {
         // делаем паузу, длинна которой зависит от длинны змеи
+        if (snake.getSections().size() < 11){
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (snake.getSections().size() >= 11 && snake.getSections().size() <= 15) {
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (snake.getSections().size() > 15) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
