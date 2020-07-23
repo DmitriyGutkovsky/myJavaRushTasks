@@ -40,6 +40,18 @@ public class Snake {
     }
 
     void move(){
+        if (isAlive == false) return;
+
+//        switch (getDirection()) {
+        switch (direction) {
+            case UP: move(0, -1);
+            case RIGHT: move(1, 0);
+            case DOWN: move(0, 1);
+            case LEFT: move(-1, 0);
+        }
+    }
+
+    void move(int x, int y){
 
     }
 }
