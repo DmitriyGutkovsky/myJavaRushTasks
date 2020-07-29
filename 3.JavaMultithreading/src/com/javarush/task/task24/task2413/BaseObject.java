@@ -1,6 +1,8 @@
 package com.javarush.task.task24.task2413;
 
-public class BaseObject {
+import static java.awt.geom.Point2D.distance;
+
+public abstract class BaseObject {
     private double x;
     private double y;
     private double radius;
@@ -33,5 +35,18 @@ public class BaseObject {
         this.x = x;
         this.y = y;
         this.radius = radius;
+    }
+
+    abstract void draw(Canvas canvas);
+
+    abstract void move();
+
+    boolean isIntersec(BaseObject o){
+
+        double distance = Math.sqrt(Math.pow((x-o.x),2) + Math.pow((y-o.y),2));
+
+        if(distance<=Math.max(this.radius, o.radius)) return true;
+
+        return false;
     }
 }
