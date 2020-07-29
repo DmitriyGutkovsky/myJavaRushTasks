@@ -1,6 +1,6 @@
 package com.javarush.task.task23.task2309;
 
-import com.javarush.task.task23.task2309.vo.NamedItem;
+import com.javarush.task.task23.task2309.vo.*;
 
 import java.util.List;
 
@@ -10,9 +10,59 @@ import java.util.List;
 public class Solution {
     public static void main(String[] args) {
         Solution solution = new Solution();
-//        print(solution.getUsers());
-//        print(solution.getLocations());
+        print(solution.getUsers());
+        print(solution.getLocations());
+        print(solution.getServers());
+        print(solution.getSubjects());
+        print(solution.getSubscriptions());
     }
+
+    public List getUsers() {
+        return new AbstractDbSelectExecutor<User>() {
+            @Override
+            public String getQuery() {
+                return "SELECT * FROM USER";
+            }
+        }.execute();
+    }
+
+    public List getLocations() {
+        return new AbstractDbSelectExecutor<Location>() {
+            @Override
+            public String getQuery() {
+                return "SELECT * FROM LOCATION";
+            }
+        }.execute();
+    }
+
+    public List getServers(){
+        return  new AbstractDbSelectExecutor<Server>(){
+            @Override
+            public String getQuery(){
+                return "SELECT * FROM SERVER";
+            }
+        }.execute();
+    }
+
+    public List getSubjects() {
+        return new AbstractDbSelectExecutor<Subject>() {
+            @Override
+            public String getQuery() {
+                return "SELECT * FROM SUBJECT";
+            }
+        }.execute();
+    }
+
+    public List getSubscriptions() {
+        return new AbstractDbSelectExecutor<Subscription>() {
+            @Override
+            public String getQuery() {
+                return "SELECT * FROM SUBSCRIPTION";
+            }
+        }.execute();
+    }
+
+
 
     public static void print(List list) {
         String format = "Id=%d, name='%s', description=%s";
