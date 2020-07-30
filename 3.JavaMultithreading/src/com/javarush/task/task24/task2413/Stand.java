@@ -13,7 +13,7 @@ public class Stand extends BaseObject {
     }
 
     public Stand(double x, double y, double radius) {
-        super(x,y,radius);
+        super(x, y, radius);
     }
 
     public Stand(double x, double y) {
@@ -29,6 +29,14 @@ public class Stand extends BaseObject {
 
     @Override
     void move() {
+        x = x + speed * direction;
+    }
 
+    void moveLeft(){
+        direction = -1;
+    }
+
+    void moveRight(){
+        direction = 1;
     }
 }
