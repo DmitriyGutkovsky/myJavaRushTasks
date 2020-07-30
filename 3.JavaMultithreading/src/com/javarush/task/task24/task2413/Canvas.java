@@ -46,6 +46,7 @@ public class Canvas {
     }
 
     void drawMatrix(double x, double y, int[][] matrix, char c){
+
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 if (matrix[i][j] != 0) {
@@ -54,5 +55,18 @@ public class Canvas {
             }
         }
 
+    }
+
+    void clear(){
+        matrix = new char[this.height +2][this.width+2];
+    }
+
+    void print(){
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+                System.out.print(matrix[i][j]);
+            }
+            System.out.println();
+        }
     }
 }
