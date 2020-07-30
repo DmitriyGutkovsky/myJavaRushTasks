@@ -57,6 +57,6 @@ public class Ball extends BaseObject {
     void start(){
         isFrozen = false;
     }
-
+    
     void checkRebound(int minx, int maxx, int miny, int maxy){}
 }
