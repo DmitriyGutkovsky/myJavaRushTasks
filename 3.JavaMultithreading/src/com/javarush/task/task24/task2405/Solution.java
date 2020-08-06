@@ -13,7 +13,6 @@ public class Solution implements Action {
 
         public void someAction() {
             //напишите тут ваш код
-
             if (param > 0) {
                 while (param > 0) {
                     System.out.println(param--);
@@ -22,20 +21,20 @@ public class Solution implements Action {
                     @Override
                     public Action getDependantAction() {
                         super.someAction();
-                        return null;
-                    }
-                }.someAction();
-            } else {
-                new SecondClass(){
-                    @Override
-                    public void someAction() {
+                        return new Action() {
+                            @Override
+                            public void someAction() {
 
+                            }
+                        };
                     }
                 }.someAction();
             }
+            SecondClass secondClass = new SecondClass();
+            secondClass.someAction();
+            System.out.println(secondClass.SPECIFIC_ACTION_FOR_ANONYMOUS_SECOND_CLASS_PARAM.substring(1) + (param));
         }
     };
-
 
     public Solution(int param) {
         this.param = param;
