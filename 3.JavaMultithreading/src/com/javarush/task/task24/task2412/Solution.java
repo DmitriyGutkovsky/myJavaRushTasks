@@ -24,7 +24,7 @@ public class Solution {
         String[] filepart = {"change {4}", "open {2} and last {3}"};
 
         ChoiceFormat fileform = new ChoiceFormat(filelimits, filepart);
-        Format[] testFormats = {null, dateFormat, fileform};
+        Format[] testFormats = {null, null, dateFormat, fileform};
         MessageFormat pattform = new MessageFormat("{0}   {1} | {5} {6}");
         pattform.setFormats(testFormats);
 
@@ -43,7 +43,40 @@ public class Solution {
     public static void sort(List<Stock> list) {
         list.sort(new Comparator<Stock>() {
             public int compare(Stock stock1, Stock stock2) {
-                return 0;
+                String name1 = ((String) stock1.get("name"));
+                String name2 = ((String) stock2.get("name"));
+                int compareResult = name1.compareTo(name2);
+                if (compareResult != 0) {
+                    return compareResult;
+                } else {
+                    Date date1 = (Date) stock1.get("date");
+                    Date date2 = (Date) stock2.get("date");
+                    SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+                    int dCompResult = df.format(date1).compareTo(df.format(date2));
+                    if (dCompResult != 0) {
+                        return (-dCompResult);
+                    } else {
+                        double open;
+                        double last;
+                        double profit1;
+                        double profit2;
+                        if (stock1.containsKey("open")) {
+                            open = ((double) stock1.get("open"));
+                            last = ((double) stock1.get("last"));
+                            profit1 = last - open;
+                        } else {
+                            profit1 = ((double) stock1.get("change"));
+                        }
+                        if (stock2.containsKey("open")) {
+                            open = ((double) stock2.get("open"));
+                            last = ((double) stock2.get("last"));
+                            profit2 = last - open;
+                        } else {
+                            profit2 = ((double) stock2.get("change"));
+                        }
+                        return (-Double.compare(profit1, profit2));
+                    }
+                }
             }
         });
     }
