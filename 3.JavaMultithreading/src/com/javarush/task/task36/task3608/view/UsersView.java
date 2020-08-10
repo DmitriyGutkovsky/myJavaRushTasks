@@ -12,7 +12,7 @@ public class UsersView implements View {
     public void refresh(ModelData modelData) {
         System.out.println("All users:");
         for (User user : modelData.getUsers()) {
-            System.out.println("\t"+user);
+            System.out.println("\t" + user);
         }
         System.out.println("===================================================");
     }
@@ -22,9 +22,12 @@ public class UsersView implements View {
         this.controller = controller;
     }
 
-    public void fireEventShowAllUsers(){
+    public void fireEventShowAllUsers() {
         controller.onShowAllUsers();
+    }
 
+    public void fireEventShowDeletedUsers() {
+        controller.onShowAllDeletedUsers();
     }
 
 
