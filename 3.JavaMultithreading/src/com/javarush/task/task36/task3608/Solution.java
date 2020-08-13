@@ -12,25 +12,15 @@ public class Solution {
         UsersView usersView = new UsersView();
         EditUserView editUserView = new EditUserView();
         Controller controller = new Controller();
-
         usersView.setController(controller);
-
         controller.setModel(model);
         controller.setUsersView(usersView);
-
         usersView.fireEventShowAllUsers();
-
-
         editUserView.setController(controller);
         controller.setEditUserView(editUserView);
-
         usersView.fireEventOpenUserEditForm(126l);
-
         editUserView.fireEventUserDeleted(124l);
-
-
+        editUserView.fireEventUserChanged("Dima", 126, 10);
         usersView.fireEventShowDeletedUsers();
-
-
     }
 }
