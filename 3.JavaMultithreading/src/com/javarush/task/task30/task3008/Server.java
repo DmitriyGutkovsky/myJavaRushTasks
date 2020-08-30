@@ -3,20 +3,32 @@ package com.javarush.task.task30.task3008;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
-    private static class Handler extends Thread {
+    private static Map<String, Connection> connectionMap = new ConcurrentHashMap<>();
+    private static class Handler extends Thread{
         private Socket socket;
-
-        public Handler(Socket socket) {
+        public Handler (Socket socket){
             this.socket = socket;
         }
     }
+    public static void sendBroadcastMessage(Message message){
+        try {
+            for(Map.Entry<String, Connection> pair : connectionMap.entrySet()){
+                pair.getValue().send(message);
+            };
 
+        } catch (IOException e) {
+            ConsoleHelper.writeMessage("Сообщение не было отправлено");
+        }
+    }
     public static void main(String[] args) {
-        try (ServerSocket serverSocket = new ServerSocket(ConsoleHelper.readInt())) {
+        try(ServerSocket serverSocket = new ServerSocket(ConsoleHelper.readInt())) {
             ConsoleHelper.writeMessage("Сервер запущен");
-            for (; ; ) {
+            for(;;){
                 new Handler(serverSocket.accept()).start();
             }
 
