@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
@@ -24,8 +25,18 @@ public class Server {
                     !connectionMap.containsKey(receiveMessage.getData())) {
                 connectionMap.put(receiveMessage.getData(), connection);
                 connection.send(new Message(MessageType.NAME_ACCEPTED));
-            } else  return serverHandshake(connection);
+            } else return serverHandshake(connection);
             return receiveMessage.getData();
+        }
+
+        private void notifyUsers(Connection connection, String userName) throws IOException {
+            for(Map.Entry<String, Connection> pair : connectionMap.entrySet()){
+                String name = pair.getKey();
+                if (!name.equals(userName)){
+                    connection.send(new Message(MessageType.USER_ADDED, name));
+                }
+            }
+
         }
     }
 
