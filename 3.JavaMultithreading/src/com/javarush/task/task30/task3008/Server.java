@@ -29,15 +29,15 @@ public class Server {
         }
 
         private void notifyUsers(Connection connection, String userName) throws IOException {
-            for(Map.Entry<String, Connection> pair : connectionMap.entrySet()){
+            for (Map.Entry<String, Connection> pair : connectionMap.entrySet()) {
                 String name = pair.getKey();
-                if (!name.equals(userName)){
+                if (!name.equals(userName)) {
                     connection.send(new Message(MessageType.USER_ADDED, name));
                 }
             }
         }
 
-        private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException{
+        private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException {
             while (true) {
                 Message receiveMessage = connection.receive();
                 if (receiveMessage.getType() == MessageType.TEXT) {
@@ -46,6 +46,24 @@ public class Server {
                     ConsoleHelper.writeMessage("Ошибка");
                 }
             }
+        }
+
+        @Override
+        public void run() {
+            ConsoleHelper.writeMessage("установдено соеденение c " + socket.getRemoteSocketAddress());
+            try (Connection connection = new Connection(socket)) {
+                String userName = serverHandshake(connection);
+                sendBroadcastMessage(new Message(MessageType.USER_ADDED, userName));
+                notifyUsers(connection, userName);
+                serverMainLoop(connection, userName);
+                if (userName != null){
+                    connectionMap.remove(userName);
+                    sendBroadcastMessage(new Message(MessageType.USER_REMOVED, userName));
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
