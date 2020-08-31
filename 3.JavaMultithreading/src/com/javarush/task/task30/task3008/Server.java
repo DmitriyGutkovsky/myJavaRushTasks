@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
@@ -36,7 +35,17 @@ public class Server {
                     connection.send(new Message(MessageType.USER_ADDED, name));
                 }
             }
+        }
 
+        private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException{
+            while (true) {
+                Message receiveMessage = connection.receive();
+                if (receiveMessage.getType() == MessageType.TEXT) {
+                    Server.sendBroadcastMessage(new Message(MessageType.TEXT, userName + ": " + receiveMessage.getData()));
+                } else {
+                    ConsoleHelper.writeMessage("Ошибка");
+                }
+            }
         }
     }
 
@@ -45,8 +54,6 @@ public class Server {
             for (Map.Entry<String, Connection> pair : connectionMap.entrySet()) {
                 pair.getValue().send(message);
             }
-            ;
-
         } catch (IOException e) {
             ConsoleHelper.writeMessage("Сообщение не было отправлено");
         }
