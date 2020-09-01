@@ -27,15 +27,13 @@ public class Client {
     //запрашивать ввод порта сервера и возвращать его
     protected int getServerPort() {
         ConsoleHelper.writeMessage("Введите порт сервера");
-        int port = ConsoleHelper.readInt();
-        return port;
+        return ConsoleHelper.readInt();
     }
 
     //должен запрашивать и возвращать имя пользователя.
     protected String getUserName() {
         ConsoleHelper.writeMessage("Введите имя пользователя");
-        String userName = ConsoleHelper.readString();
-        return userName;
+        return ConsoleHelper.readString();
     }
 
     //в данной реализации клиента всегда должен возвращать true
@@ -62,6 +60,50 @@ public class Client {
             ConsoleHelper.writeMessage("Не удалось отправить сообщение");
             clientConnected = false;
         }
+    }
+    //Он должен создавать вспомогательный поток SocketThread,
+    // ожидать пока тот установит соединение с сервером,
+    // а после этого в цикле считывать сообщения с консоли и отправлять их серверу.
+    //Условием выхода из цикла будет отключение клиента или ввод пользователем команды 'exit'.
+    //Для информирования главного потока, что соединение установлено во вспомогательном потоке,
+    // используй методы wait() и notify() объекта класса Client.
+    public void run(){
+        SocketThread socketThread = getSocketThread();
+        socketThread.setDaemon(true);
+        socketThread.start();
 
+        synchronized (this){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+               ConsoleHelper.writeMessage("Возникла ошибка");
+               clientConnected = false;
+               return;
+            }
+        }
+
+        if (clientConnected){
+            ConsoleHelper.writeMessage("Соединение установлено.\n" +
+                    "Для выхода наберите команду 'exit'.");
+        } else {
+            ConsoleHelper.writeMessage("Произошла ошибка во время работы клиента.");
+        }
+
+        while (clientConnected){
+            String text = ConsoleHelper.readString();
+            if (text.equals("exit")){
+                break;
+            }  else {
+                if (shouldSendTextFromConsole()){
+                    sendTextMessage(text);
+                }
+            }
+        }
+
+    }
+
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.run();
     }
 }
