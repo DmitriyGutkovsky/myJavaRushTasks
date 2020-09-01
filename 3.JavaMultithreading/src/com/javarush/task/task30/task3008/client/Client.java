@@ -1,9 +1,6 @@
 package com.javarush.task.task30.task3008.client;
 
-import com.javarush.task.task30.task3008.Connection;
-import com.javarush.task.task30.task3008.ConsoleHelper;
-import com.javarush.task.task30.task3008.Message;
-import com.javarush.task.task30.task3008.MessageType;
+import com.javarush.task.task30.task3008.*;
 
 import java.io.IOException;
 
@@ -14,6 +11,32 @@ public class Client {
 
     public class SocketThread extends Thread {
 
+        //должен выводить текст message в консоль
+        protected void processIncomingMessage(String message) {
+            ConsoleHelper.writeMessage(message);
+        }
+
+        //должен выводить в консоль информацию о том,
+        // что участник с именем userName присоединился к чату
+        protected void informAboutAddingNewUser(String userName) {
+            ConsoleHelper.writeMessage(userName + " присоединился к чату");
+        }
+
+        //должен выводить в консоль, что участник с именем userName покинул чат.
+        protected void informAboutDeletingNewUser(String userName) {
+            ConsoleHelper.writeMessage(userName + " покинул чат");
+        }
+
+        //этот метод должен:
+        //а) Устанавливать значение поля clientConnected
+        // внешнего объекта Client в соответствии с переданным параметром.
+        //б) Оповещать (пробуждать ожидающий) основной поток класса Client.
+        protected void notifyConnectionStatusChanged(boolean clientConnected) {
+            Client.this.clientConnected = clientConnected;
+            synchronized (Client.this) {
+                Client.this.notify();
+            }
+        }
     }
 
     //должен запросить ввод адреса сервера у пользователя и вернуть введенное значение.
@@ -61,45 +84,45 @@ public class Client {
             clientConnected = false;
         }
     }
+
     //Он должен создавать вспомогательный поток SocketThread,
     // ожидать пока тот установит соединение с сервером,
     // а после этого в цикле считывать сообщения с консоли и отправлять их серверу.
     //Условием выхода из цикла будет отключение клиента или ввод пользователем команды 'exit'.
     //Для информирования главного потока, что соединение установлено во вспомогательном потоке,
     // используй методы wait() и notify() объекта класса Client.
-    public void run(){
+    public void run() {
         SocketThread socketThread = getSocketThread();
         socketThread.setDaemon(true);
         socketThread.start();
 
-        synchronized (this){
+        synchronized (this) {
             try {
                 wait();
             } catch (InterruptedException e) {
-               ConsoleHelper.writeMessage("Возникла ошибка");
-               clientConnected = false;
-               return;
+                ConsoleHelper.writeMessage("Возникла ошибка");
+                clientConnected = false;
+                return;
             }
         }
 
-        if (clientConnected){
+        if (clientConnected) {
             ConsoleHelper.writeMessage("Соединение установлено.\n" +
                     "Для выхода наберите команду 'exit'.");
         } else {
             ConsoleHelper.writeMessage("Произошла ошибка во время работы клиента.");
         }
 
-        while (clientConnected){
+        while (clientConnected) {
             String text = ConsoleHelper.readString();
-            if (text.equals("exit")){
+            if (text.equals("exit")) {
                 break;
-            }  else {
-                if (shouldSendTextFromConsole()){
+            } else {
+                if (shouldSendTextFromConsole()) {
                     sendTextMessage(text);
                 }
             }
         }
-
     }
 
     public static void main(String[] args) {
