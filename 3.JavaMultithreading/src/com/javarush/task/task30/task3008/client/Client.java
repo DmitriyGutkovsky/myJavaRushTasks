@@ -37,6 +37,58 @@ public class Client {
                 Client.this.notify();
             }
         }
+
+
+        // а) В цикле получать сообщения, используя соединение connection.
+        //б) Если тип полученного сообщения NAME_REQUEST (сервер запросил имя),
+        // запросить ввод имени пользователя с помощью метода getUserName(),
+        // создать новое сообщение с типом MessageType.USER_NAME и введенным именем,
+        // отправить сообщение серверу.
+        //в) Если тип полученного сообщения MessageType.NAME_ACCEPTED (сервер принял имя),
+        // значит сервер принял имя клиента, нужно об этом сообщить главному потоку, он этого очень ждет.
+        //Сделай это с помощью метода notifyConnectionStatusChanged(), передав в него true.
+        //После этого выйди из метода.
+        //г) Если пришло сообщение с каким-либо другим типом,
+        // кинь исключение IOException("Unexpected MessageType").
+        protected void clientHandshake() throws IOException, ClassNotFoundException {
+            while (true) {
+                Message receiveMessage = connection.receive();
+
+                if (receiveMessage.getType() == MessageType.NAME_REQUEST) {
+                    String userName = getUserName();
+                    connection.send(new Message(MessageType.USER_NAME, userName));
+                } else if (receiveMessage.getType() == MessageType.NAME_ACCEPTED) {
+                    notifyConnectionStatusChanged(true);
+                    return;
+                } else {
+                    throw new IOException("Unexpected MessageType");
+                }
+            }
+        }
+
+        /*Этот метод будет реализовывать главный цикл обработки сообщений сервера. Внутри метода:
+        а) Получи сообщение от сервера, используя соединение connection.
+        б) Если это текстовое сообщение (тип MessageType.TEXT),
+        обработай его с помощью метода processIncomingMessage().
+        в) Если это сообщение с типом MessageType.USER_ADDED,
+        обработай его с помощью метода informAboutAddingNewUser().
+        г) Если это сообщение с типом MessageType.USER_REMOVED,
+        обработай его с помощью метода informAboutDeletingNewUser().
+        д) Если клиент получил сообщение какого-либо другого типа,
+        брось исключение IOException("Unexpected MessageType").
+         */
+        protected void clientMainLoop() throws IOException, ClassNotFoundException {
+            for (; ; ) {
+                Message receiveMessage = connection.receive();
+                if (receiveMessage.getType() == MessageType.TEXT) {
+                    processIncomingMessage(receiveMessage.getData());
+                } else if (receiveMessage.getType() == MessageType.USER_ADDED) {
+                    informAboutAddingNewUser(receiveMessage.getData());
+                } else if (receiveMessage.getType() == MessageType.USER_REMOVED) {
+                    informAboutDeletingNewUser(receiveMessage.getData());
+                } else throw new IOException("Unexpected MessageType");
+            }
+        }
     }
 
     //должен запросить ввод адреса сервера у пользователя и вернуть введенное значение.
