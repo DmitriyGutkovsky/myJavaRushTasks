@@ -3,6 +3,7 @@ package com.javarush.task.task30.task3008.client;
 import com.javarush.task.task30.task3008.*;
 
 import java.io.IOException;
+import java.net.Socket;
 
 public class Client {
 
@@ -37,7 +38,6 @@ public class Client {
                 Client.this.notify();
             }
         }
-
 
         // а) В цикле получать сообщения, используя соединение connection.
         //б) Если тип полученного сообщения NAME_REQUEST (сервер запросил имя),
@@ -87,6 +87,30 @@ public class Client {
                 } else if (receiveMessage.getType() == MessageType.USER_REMOVED) {
                     informAboutDeletingNewUser(receiveMessage.getData());
                 } else throw new IOException("Unexpected MessageType");
+            }
+        }
+
+        /*
+        1) Запроси адрес и порт сервера с помощью методов getServerAddress() и getServerPort().
+        2) Создай новый объект класса java.net.Socket, используя данные, полученные в предыдущем пункте.
+        3) Создай объект класса Connection, используя сокет из п.17.2.
+        4) Вызови метод, реализующий "рукопожатие" клиента с сервером (clientHandshake()).
+        5) Вызови метод, реализующий основной цикл обработки сообщений сервера.
+        6) При возникновении исключений IOException или ClassNotFoundException
+        сообщи главному потоку о проблеме, используя notifyConnectionStatusChanged() и
+        false в качестве параметра.
+         */
+        @Override
+        public void run() {
+            String serverAddress = getServerAddress();
+            int serverPort = getServerPort();
+            try {
+                Socket socket = new Socket(serverAddress, serverPort);
+                connection = new Connection(socket);
+                clientHandshake();
+                clientMainLoop();
+            } catch (IOException | ClassNotFoundException e) {
+                notifyConnectionStatusChanged(false);
             }
         }
     }
