@@ -39,8 +39,7 @@ public class Solution {
 //    }
 
     static boolean isSubstringPresent(String substring, String string) {
-        if (string.contains(substring)) return true;
-    return  false;
+        return string.contains(substring);
     }
 
 }
