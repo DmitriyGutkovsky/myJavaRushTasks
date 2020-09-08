@@ -8,11 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileManager {
-    private Path rootPath; // корневой путь директории, файлы которой нас интересуют
-    private List<Path> fileList = new ArrayList<>(); // список относительных путей файлов внутри rootPath
+    private Path rootPath;
+    private List<Path> fileList;
 
     public FileManager(Path rootPath) throws IOException {
         this.rootPath = rootPath;
+        this.fileList = new ArrayList<>();
         collectFileList(rootPath);
     }
 
@@ -21,15 +22,20 @@ public class FileManager {
     }
 
     private void collectFileList(Path path) throws IOException {
+        // Добавляем только файлы
         if (Files.isRegularFile(path)) {
-            fileList.add(rootPath.relativize(path));
-        } else if (Files.isDirectory(path)) {
+            Path relativePath = rootPath.relativize(path);
+            fileList.add(relativePath);
+        }
+
+        // Добавляем содержимое директории
+        if (Files.isDirectory(path)) {
+            // Рекурсивно проходимся по всему содержмому директории
+            // Чтобы не писать код по вызову close для DirectoryStream, обернем вызов newDirectoryStream в try-with-resources
             try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path)) {
-                for (Path path1 : directoryStream) {
-                    collectFileList(path1);
+                for (Path file : directoryStream) {
+                    collectFileList(file);
                 }
-            } catch (Exception e) {
-                System.out.println(e);
             }
         }
     }
