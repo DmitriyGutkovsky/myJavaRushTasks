@@ -13,8 +13,17 @@ public class View extends JFrame implements ActionListener {
     private JTabbedPane tabbedPane = new JTabbedPane(); // это будет панель с двумя вкладками
     private JTextPane htmlTextPane = new JTextPane(); // это будет компонент для визуального редактирования html
     private JEditorPane plainTextPane = new JEditorPane(); // это будет компонент для редактирования html в виде текста,
-                                        // он будет отображать код html (теги и их содержимое).
+    // он будет отображать код html (теги и их содержимое).
 
+
+    public View() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getLookAndFeel());;
+        } catch (Exception e) {
+            ExceptionHandler.log(e);
+        }
+
+    }
 
     public Controller getController() {
         return controller;
@@ -29,7 +38,7 @@ public class View extends JFrame implements ActionListener {
 
     }
 
-    public void init(){
+    public void init() {
         initGui();
         FrameListener listener = new FrameListener(this);
         this.addWindowListener(listener);
@@ -41,21 +50,31 @@ public class View extends JFrame implements ActionListener {
         controller.exit();
     }
 
-    public void initMenuBar(){}
+    public void initMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        MenuHelper.initFileMenu(this, menuBar);
+        MenuHelper.initEditMenu(this, menuBar);
+        MenuHelper.initStyleMenu(this, menuBar);
+        MenuHelper.initAlignMenu(this, menuBar);
+        MenuHelper.initColorMenu(this, menuBar);
+        MenuHelper.initFontMenu(this, menuBar);
+        MenuHelper.initHelpMenu(this, menuBar);
+        getContentPane().add(menuBar, BorderLayout.NORTH);
+    }
 
-    public void initEditor(){
+    public void initEditor() {
         htmlTextPane.setContentType("text/html");
         JScrollPane jScrollPane = new JScrollPane(htmlTextPane);
         tabbedPane.addTab("HTML", jScrollPane);
         JScrollPane jScrollPane1 = new JScrollPane(plainTextPane);
         tabbedPane.addTab("Текст", jScrollPane1);
         tabbedPane.setPreferredSize(new Dimension(600, 600));
-        TabbedPaneChangeListener tabbedPaneChangeListener = new TabbedPaneChangeListener(this );
+        TabbedPaneChangeListener tabbedPaneChangeListener = new TabbedPaneChangeListener(this);
         tabbedPane.addChangeListener(tabbedPaneChangeListener);
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
     }
 
-    public void initGui(){
+    public void initGui() {
         initMenuBar();
         initEditor();
         pack();
