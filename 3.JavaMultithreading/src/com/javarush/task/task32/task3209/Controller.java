@@ -2,10 +2,13 @@ package com.javarush.task.task32.task3209;
 
 import com.javarush.task.task32.task3209.listeners.UndoListener;
 
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
 
 public class Controller {
     private View view;
@@ -46,5 +49,15 @@ public class Controller {
         this.document = defaultDocument;
         defaultDocument.addUndoableEditListener(undoListener);
         view.update();
+    }
+
+    public void setPlainText(String text){
+        resetDocument();
+        StringReader reader = new StringReader(text);
+        try {
+            new HTMLEditorKit().read(reader,document,0);
+        } catch (IOException | BadLocationException e) {
+            ExceptionHandler.log(e);
+        }
     }
 }
