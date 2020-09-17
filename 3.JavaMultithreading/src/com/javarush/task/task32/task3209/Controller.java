@@ -17,6 +17,7 @@ public class Controller {
     private HTMLDocument document;
 
     private File currentFile;
+
     public Controller(View view) {
         this.view = view;
     }
@@ -25,11 +26,11 @@ public class Controller {
         return document;
     }
 
-    public void init(){
+    public void init() {
 
     }
 
-    public void exit(){
+    public void exit() {
         System.exit(0);
     }
 
@@ -41,7 +42,7 @@ public class Controller {
         controller.init();
     }
 
-    public void resetDocument(){
+    public void resetDocument() {
         UndoListener undoListener = view.getUndoListener();
         if (document != null) {
             document.removeUndoableEditListener(undoListener);
@@ -52,17 +53,17 @@ public class Controller {
         view.update();
     }
 
-    public void setPlainText(String text){
+    public void setPlainText(String text) {
         resetDocument();
         StringReader reader = new StringReader(text);
         try {
-            new HTMLEditorKit().read(reader,document,0);
+            new HTMLEditorKit().read(reader, document, 0);
         } catch (IOException | BadLocationException e) {
             ExceptionHandler.log(e);
         }
     }
 
-    public String getPlainText(){
+    public String getPlainText() {
         StringWriter writer = new StringWriter();
         try {
             new HTMLEditorKit().write(writer, document, 0, document.getLength());
@@ -70,5 +71,20 @@ public class Controller {
             ExceptionHandler.log(e);
         }
         return writer.toString();
+    }
+
+    public void createNewDocument() {
+
+    }
+
+    public void openDocument() {
+    }
+
+    public void saveDocument() {
+
+    }
+
+    public void saveDocumentAs() {
+
     }
 }

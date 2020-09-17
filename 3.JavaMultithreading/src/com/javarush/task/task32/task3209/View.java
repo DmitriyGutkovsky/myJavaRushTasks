@@ -43,7 +43,27 @@ public class View extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        String actionCommand = e.getActionCommand();
+        switch (actionCommand) {
+            case "Новый":
+                controller.createNewDocument();
+                break;
+            case "Открыть":
+                controller.openDocument();
+                break;
+            case "Сохранить":
+                controller.saveDocument();
+                break;
+            case "Сохранить как...":
+                controller.saveDocumentAs();
+                break;
+            case "Выход":
+                exit();
+                break;
+            case "О программе":
+                showAbout();
+                break;
+        }
     }
 
     public void init() {
@@ -114,7 +134,7 @@ public class View extends JFrame implements ActionListener {
     }
 
     public void undo() {
-        try{
+        try {
             undoManager.undo();
         } catch (Exception e) {
             ExceptionHandler.log(e);
@@ -122,7 +142,7 @@ public class View extends JFrame implements ActionListener {
     }
 
     public void redo() {
-        try{
+        try {
             undoManager.redo();
         } catch (Exception e) {
             ExceptionHandler.log(e);
@@ -130,28 +150,28 @@ public class View extends JFrame implements ActionListener {
     }
 
     public void resetUndo() {
-        try{
+        try {
             undoManager.discardAllEdits();
         } catch (Exception e) {
             ExceptionHandler.log(e);
         }
     }
 
-    public boolean isHtmlTabSelected(){
+    public boolean isHtmlTabSelected() {
         return tabbedPane.getSelectedIndex() == 0;
     }
 
-    public void selectHtmlTab(){
+    public void selectHtmlTab() {
         tabbedPane.setSelectedIndex(0);
         resetUndo();
     }
 
-    public void  update(){
+    public void update() {
         HTMLDocument document = controller.getDocument();
         htmlTextPane.setDocument(document);
     }
 
-    public void showAbout(){
+    public void showAbout() {
         JOptionPane.showMessageDialog(getContentPane(), "infoMessage", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
     }
 
