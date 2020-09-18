@@ -6,7 +6,6 @@ import com.javarush.task.task32.task3209.listeners.UndoListener;
 
 import javax.swing.*;
 import javax.swing.text.html.HTMLDocument;
-import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
