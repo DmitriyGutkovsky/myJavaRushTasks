@@ -4,7 +4,6 @@ import com.javarush.task.task32.task3209.listeners.UndoListener;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import java.io.*;
@@ -80,10 +79,35 @@ public class Controller {
     }
 
     public void openDocument() {
+        view.selectHtmlTab();
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new HTMLFileFilter());
+        if (chooser.showOpenDialog(view) == JFileChooser.APPROVE_OPTION) {
+            currentFile = chooser.getSelectedFile();
+            resetDocument();
+            view.setTitle(currentFile.getName());
+            try (FileReader fileReader = new FileReader(currentFile)) {
+                new HTMLEditorKit().read(fileReader,document, 0);
+                view.resetUndo();
+            } catch (IOException | BadLocationException e) {
+                ExceptionHandler.log(e);
+            }
+        }
+
     }
 
     public void saveDocument() {
-
+        if (currentFile == null) {
+            saveDocumentAs();
+        } else {
+            view.selectHtmlTab();
+            view.setTitle(currentFile.getName());
+            try (FileWriter fileWriter = new FileWriter(currentFile)) {
+                new HTMLEditorKit().write(fileWriter, document, 0, document.getLength());
+            } catch (IOException | BadLocationException e) {
+                ExceptionHandler.log(e);
+            }
+        }
     }
 
     public void saveDocumentAs() {
@@ -94,7 +118,7 @@ public class Controller {
             currentFile = chooser.getSelectedFile();
             view.setTitle(currentFile.getName());
             try (FileWriter fileWriter = new FileWriter(currentFile)) {
-                new HTMLEditorKit().write(fileWriter,document,0, document.getLength());
+                new HTMLEditorKit().write(fileWriter, document, 0, document.getLength());
             } catch (IOException | BadLocationException e) {
                 ExceptionHandler.log(e);
             }
