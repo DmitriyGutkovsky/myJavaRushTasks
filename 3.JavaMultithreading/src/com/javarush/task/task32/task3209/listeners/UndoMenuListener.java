@@ -35,11 +35,9 @@ public class UndoMenuListener implements MenuListener {
 
     @Override
     public void menuDeselected(MenuEvent e) {
-
     }
 
     @Override
     public void menuCanceled(MenuEvent e) {
-
     }
 }

@@ -34,7 +34,6 @@ public class MenuHelper {
     public static void initHelpMenu(View view, JMenuBar menuBar) {
         JMenu helpMenu = new JMenu("Помощь");
         menuBar.add(helpMenu);
-
         addMenuItem(helpMenu, "О программе", view);
     }
 

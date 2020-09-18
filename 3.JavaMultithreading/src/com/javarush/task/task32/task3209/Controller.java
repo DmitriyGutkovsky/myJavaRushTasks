@@ -87,7 +87,7 @@ public class Controller {
             resetDocument();
             view.setTitle(currentFile.getName());
             try (FileReader fileReader = new FileReader(currentFile)) {
-                new HTMLEditorKit().read(fileReader,document, 0);
+                new HTMLEditorKit().read(fileReader, document, 0);
                 view.resetUndo();
             } catch (IOException | BadLocationException e) {
                 ExceptionHandler.log(e);

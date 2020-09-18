@@ -19,16 +19,14 @@ public class TextEditMenuListener implements MenuListener {
     public void menuSelected(MenuEvent menuEvent) {
         JMenu source = (JMenu) menuEvent.getSource();
         Component[] menuComponents = source.getMenuComponents();
-        Arrays.stream(menuComponents).forEach(x -> x.setEnabled((view.isHtmlTabSelected()) ));
+        Arrays.stream(menuComponents).forEach(x -> x.setEnabled((view.isHtmlTabSelected())));
     }
 
     @Override
     public void menuDeselected(MenuEvent e) {
-
     }
 
     @Override
     public void menuCanceled(MenuEvent e) {
-
     }
 }

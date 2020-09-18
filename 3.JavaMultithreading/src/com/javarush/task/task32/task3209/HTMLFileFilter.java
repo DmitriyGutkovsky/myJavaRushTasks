@@ -6,7 +6,7 @@ import java.io.File;
 public class HTMLFileFilter extends FileFilter {
     @Override
     public boolean accept(File f) {
-        return  (f.isDirectory() || f.getName().toLowerCase().endsWith(".html") ||
+        return (f.isDirectory() || f.getName().toLowerCase().endsWith(".html") ||
                 f.getName().toLowerCase().endsWith(".htm"));
     }
 

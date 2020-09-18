@@ -29,7 +29,6 @@ public class View extends JFrame implements ActionListener {
         } catch (Exception e) {
             ExceptionHandler.log(e);
         }
-
     }
 
     public Controller getController() {
@@ -70,7 +69,6 @@ public class View extends JFrame implements ActionListener {
         FrameListener listener = new FrameListener(this);
         this.addWindowListener(listener);
         setVisible(true);
-
     }
 
     public void exit() {
@@ -106,7 +104,6 @@ public class View extends JFrame implements ActionListener {
         initEditor();
         pack();
     }
-
 
     public void selectedTabChanged() {
         switch (tabbedPane.getSelectedIndex()) {
@@ -173,5 +170,4 @@ public class View extends JFrame implements ActionListener {
     public void showAbout() {
         JOptionPane.showMessageDialog(getContentPane(), "infoMessage", "InfoBox: ", JOptionPane.INFORMATION_MESSAGE);
     }
-
 }
