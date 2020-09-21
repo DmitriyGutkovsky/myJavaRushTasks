@@ -18,7 +18,7 @@ public class Order {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[");
+        sb.append("Your order: [");
         if (dishes == null) return "";
         else {
             for (int i = 0; i < dishes.size() - 1; i++) {
