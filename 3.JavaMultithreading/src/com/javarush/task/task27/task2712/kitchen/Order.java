@@ -25,7 +25,7 @@ public class Order {
                 sb.append(dishes.get(i)).append(", ");
             }
         }
-        sb.append(dishes.get(dishes.size() - 1)).append(" of ").append(tablet.toString());
+        sb.append(dishes.get(dishes.size() - 1)).append("]").append(" of ").append(tablet.toString());
         return sb.toString();
     }
 }
