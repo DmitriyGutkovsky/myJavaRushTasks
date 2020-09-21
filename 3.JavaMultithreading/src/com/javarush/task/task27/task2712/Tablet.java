@@ -25,7 +25,9 @@ public class Tablet extends Observable {
             logger.log(Level.SEVERE, "Console is unavailable.");
         }
         setChanged();
-        notifyObservers(order);
+        if (!order.isEmpty()) {
+            notifyObservers(order);
+        }
         return order;
     }
 

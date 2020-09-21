@@ -17,15 +17,14 @@ public class Cook extends Observable implements Observer {
         return name;
     }
 
-
-
     //    - observable - объект, который отправил нам значение
     //- arg - само значение, в нашем случае - это объект Order
     @Override
     public void update(Observable o, Object arg) {
-        ConsoleHelper.writeMessage(arg.toString());
-        ConsoleHelper.writeMessage("Start cooking - " + arg.toString());
-        setChanged();
-        notifyObservers(arg);
+            ConsoleHelper.writeMessage(arg.toString());
+            ConsoleHelper.writeMessage("Start cooking - " + arg.toString() +
+                    ", cooking time " + ((Order) arg).getTotalCookingTime() + "min");
+            setChanged();
+            notifyObservers(arg);
     }
 }

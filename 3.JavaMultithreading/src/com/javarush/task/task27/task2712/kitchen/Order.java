@@ -28,4 +28,14 @@ public class Order {
         sb.append(dishes.get(dishes.size() - 1)).append("]").append(" of ").append(tablet.toString());
         return sb.toString();
     }
+
+    // подсчет времени приготовления всего заказа
+    public int getTotalCookingTime() {
+        return dishes.stream().mapToInt(x -> x.getDuration()).sum();
+    }
+
+    public boolean isEmpty() {
+        if (dishes.size() == 0) return true;
+        return false;
+    }
 }
