@@ -31,4 +31,11 @@ public class Advertisement {
         return amountPerOneDisplaying;
     }
 
+    public void revalidate(){
+        if (hits < 1) {
+            throw new UnsupportedOperationException();
+        }
+        hits --;
+    }
+
 }
