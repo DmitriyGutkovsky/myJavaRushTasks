@@ -16,7 +16,8 @@ public class Advertisement {
         this.hits = hits;
         this.duration = duration;
 
-        amountPerOneDisplaying = this.initialAmount / this.hits;
+//        amountPerOneDisplaying = this.initialAmount / this.hits;
+        amountPerOneDisplaying = this.hits > 0 ? initialAmount / hits : 0;
     }
 
     public String getName() {
@@ -38,4 +39,7 @@ public class Advertisement {
         hits --;
     }
 
+    public int getHits() {
+        return hits;
+    }
 }
