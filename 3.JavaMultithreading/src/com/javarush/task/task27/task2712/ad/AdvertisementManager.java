@@ -1,6 +1,9 @@
 package com.javarush.task.task27.task2712.ad;
 
 import com.javarush.task.task27.task2712.ConsoleHelper;
+import com.javarush.task.task27.task2712.statistic.StatisticManager;
+import com.javarush.task.task27.task2712.statistic.event.VideoSelectedEventDataRow;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,62 +24,48 @@ public class AdvertisementManager {
     }
 
     public void processVideos() {
-        List<Advertisement> advertisements1 = new ArrayList<>();
-        for (Advertisement advertisement : storage.list()) {
-            if (advertisement.getHits() > 0) {
-                advertisements1.add(advertisement);
+        List<Advertisement> availableVideos = storage.list();
+        List<Advertisement> showVideos = new ArrayList<>();
+        int totalTime = 0;
+        for (Advertisement video : availableVideos) {
+            if (video.getDuration() < timeSeconds) {
+                if ((totalTime + video.getDuration()) < timeSeconds) {
+                    totalTime = totalTime + video.getDuration();
+                    showVideos.add(video);
+                } else
+                    totalTime = totalTime;
             }
-
-        }
-        List<Advertisement> advertisements2 = new ArrayList<>();
-        chooseAdvertisement(advertisements1, advertisements2, timeSeconds);
-
-        int timeLeft = timeSeconds;
-        for (Advertisement advertisement : advertisements2) {
-            if (timeLeft < advertisement.getDuration()) {
-                continue;
-            }
-
-            ConsoleHelper.writeMessage(advertisement.getName() + " is displaying... "
-                    + advertisement.getAmountPerOneDisplaying() + ", "
-                    + advertisement.getAmountPerOneDisplaying() * 1000 / advertisement.getDuration());
-
-            timeLeft -= advertisement.getDuration();
-            advertisement.revalidate();
         }
 
-        if (timeLeft == timeSeconds) {
+
+        Collections.sort(availableVideos, new Comparator<Advertisement>() {
+            @Override
+            public int compare(Advertisement o1, Advertisement o2) {
+                long pricePerVideoDiff = o2.getAmountPerOneDisplaying() - o1.getAmountPerOneDisplaying();
+                if (pricePerVideoDiff != 0) {
+                    return (int) pricePerVideoDiff;
+                } else {
+                    return (int) (o1.getAmountPerOneDisplaying() * 1000 / o1.getDuration() - o2.getAmountPerOneDisplaying() * 1000 / o2.getDuration());
+                }
+            }
+        });
+        totalTime = timeSeconds;
+
+        StatisticManager.getInstance().register(new VideoSelectedEventDataRow(
+                availableVideos, availableVideos.size(), totalTime));
+
+        for (Advertisement adVideo : availableVideos) {
+            if (adVideo.getDuration() <= totalTime && adVideo.getHits() > 0) {
+
+                ConsoleHelper.writeMessage(String.format("%s is displaying... %d, %d", adVideo.getName(),
+                        adVideo.getAmountPerOneDisplaying(), adVideo.getAmountPerOneDisplaying() * 1000 / adVideo.getDuration()));
+                adVideo.revalidate();
+                totalTime -= adVideo.getDuration();
+            }
+        }
+
+        if (availableVideos.isEmpty()) {
             throw new NoVideoAvailableException();
         }
-    }
-
-    private void chooseAdvertisement(List<Advertisement> begin, List<Advertisement> end, int time) {
-        if (begin.isEmpty()) {
-            return;
-        }
-        Advertisement chooseAdvertisement;
-        Advertisement advertisementAmount = Collections.max(begin, Comparator.comparing(Advertisement::getAmountPerOneDisplaying));
-        List<Advertisement> advertisementsAmount = begin.stream()
-                .filter(advertisement -> advertisement.getAmountPerOneDisplaying() == advertisementAmount.getAmountPerOneDisplaying())
-                .collect(Collectors.toList());
-        if (advertisementsAmount.size() > 1) {
-            Advertisement advertisementDuration = Collections.max(advertisementsAmount, Comparator.comparing(Advertisement::getDuration));
-            List<Advertisement> advertisementsDuration = advertisementsAmount.stream()
-                    .filter(advertisement -> advertisement.getDuration() == advertisementDuration.getDuration())
-                    .collect(Collectors.toList());
-            if (advertisementsDuration.size() > 1) {
-                chooseAdvertisement = Collections.max(advertisementsDuration, Comparator.comparing(Advertisement::getHits));
-            } else {
-                chooseAdvertisement = advertisementDuration;
-            }
-        } else {
-            chooseAdvertisement = advertisementAmount;
-        }
-        begin.remove(chooseAdvertisement);
-        if (time >= chooseAdvertisement.getDuration()) {
-            end.add(chooseAdvertisement);
-            time -= chooseAdvertisement.getDuration();
-        }
-        chooseAdvertisement(begin, end, time);
     }
 }
