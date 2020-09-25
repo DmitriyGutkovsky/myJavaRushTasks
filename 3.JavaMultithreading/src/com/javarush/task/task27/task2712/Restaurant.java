@@ -14,5 +14,10 @@ public class Restaurant {
         for (int i = 1; i < 2; i++) {
             tablet1.createOrder();
         }
+        DirectorTablet directorTablet = new DirectorTablet();
+        directorTablet.printActiveVideoSet();
+        directorTablet.printAdvertisementProfit();
+        directorTablet.printArchivedVideoSet();
+        directorTablet.printCookWorkloading();
     }
 }
