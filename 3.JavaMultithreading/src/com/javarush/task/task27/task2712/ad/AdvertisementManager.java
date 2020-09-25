@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 ////у каждого планшета будет свой объект менеджера,
 //// который будет подбирать оптимальный набор роликов и их последовательность для каждого заказа
@@ -67,5 +66,6 @@ public class AdvertisementManager {
         if (availableVideos.isEmpty()) {
             throw new NoVideoAvailableException();
         }
+
     }
 }
