@@ -39,7 +39,7 @@ public class Advertisement {
         hits --;
     }
 
-    public int getHits() {
-        return hits;
+    public boolean isActive() {
+        return hits > 0;
     }
 }

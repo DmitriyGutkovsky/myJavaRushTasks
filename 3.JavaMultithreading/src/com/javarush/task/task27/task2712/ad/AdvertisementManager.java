@@ -13,59 +13,85 @@ import java.util.List;
 //// который будет подбирать оптимальный набор роликов и их последовательность для каждого заказа
 ////Он также будет взаимодействовать с плеером и отображать ролики.
 public class AdvertisementManager {
-
-    private int timeSeconds;
-
     private final AdvertisementStorage storage = AdvertisementStorage.getInstance();
+    private int timeSeconds;
 
     public AdvertisementManager(int timeSeconds) {
         this.timeSeconds = timeSeconds;
     }
 
     public void processVideos() {
-        List<Advertisement> availableVideos = storage.list();
-        List<Advertisement> showVideos = new ArrayList<>();
-        int totalTime = 0;
-        for (Advertisement video : availableVideos) {
-            if (video.getDuration() < timeSeconds) {
-                if ((totalTime + video.getDuration()) < timeSeconds) {
-                    totalTime = totalTime + video.getDuration();
-                    showVideos.add(video);
-                } else
-                    totalTime = totalTime;
+        this.totalTimeSecondsLeft = Integer.MAX_VALUE;
+        obtainOptimalVideoSet(new ArrayList<Advertisement>(), timeSeconds, 0l);
+
+        VideoSelectedEventDataRow row = new VideoSelectedEventDataRow(optimalVideoSet, maxAmount, timeSeconds - totalTimeSecondsLeft);
+        StatisticManager.getInstance().register(row);
+
+        displayAdvertisement();
+    }
+
+    //recursy
+    private long maxAmount;
+    private List<Advertisement> optimalVideoSet;
+    private int totalTimeSecondsLeft;
+
+    private void obtainOptimalVideoSet(List<Advertisement> totalList, int currentTimeSecondsLeft, long currentAmount) {
+        if (currentTimeSecondsLeft < 0) {
+            return;
+        } else if (currentAmount > maxAmount
+                || currentAmount == maxAmount && (totalTimeSecondsLeft > currentTimeSecondsLeft
+                || totalTimeSecondsLeft == currentTimeSecondsLeft && totalList.size() < optimalVideoSet.size())) {
+            this.totalTimeSecondsLeft = currentTimeSecondsLeft;
+            this.optimalVideoSet = totalList;
+            this.maxAmount = currentAmount;
+            if (currentTimeSecondsLeft == 0) {
+                return;
             }
         }
 
+        ArrayList<Advertisement> tmp = getActualAdvertisements();
+        tmp.removeAll(totalList);
+        for (Advertisement ad : tmp) {
+            if (!ad.isActive()) continue;
+            ArrayList<Advertisement> currentList = new ArrayList<>(totalList);
+            currentList.add(ad);
+            obtainOptimalVideoSet(currentList, currentTimeSecondsLeft - ad.getDuration(), currentAmount + ad.getAmountPerOneDisplaying());
+        }
+    }
 
-        Collections.sort(availableVideos, new Comparator<Advertisement>() {
-            @Override
-            public int compare(Advertisement o1, Advertisement o2) {
-                long pricePerVideoDiff = o2.getAmountPerOneDisplaying() - o1.getAmountPerOneDisplaying();
-                if (pricePerVideoDiff != 0) {
-                    return (int) pricePerVideoDiff;
-                } else {
-                    return (int) (o1.getAmountPerOneDisplaying() * 1000 / o1.getDuration() - o2.getAmountPerOneDisplaying() * 1000 / o2.getDuration());
-                }
-            }
-        });
-        totalTime = timeSeconds;
-
-        StatisticManager.getInstance().register(new VideoSelectedEventDataRow(
-                availableVideos, availableVideos.size(), totalTime));
-
-        for (Advertisement adVideo : availableVideos) {
-            if (adVideo.getDuration() <= totalTime && adVideo.getHits() > 0) {
-
-                ConsoleHelper.writeMessage(String.format("%s is displaying... %d, %d", adVideo.getName(),
-                        adVideo.getAmountPerOneDisplaying(), adVideo.getAmountPerOneDisplaying() * 1000 / adVideo.getDuration()));
-                adVideo.revalidate();
-                totalTime -= adVideo.getDuration();
+    private ArrayList<Advertisement> getActualAdvertisements() {
+        ArrayList<Advertisement> advertisements = new ArrayList<>();
+        for (Advertisement ad : storage.list()) {
+            if (ad.isActive()) {
+                advertisements.add(ad);
             }
         }
+        return advertisements;
+    }
 
-        if (availableVideos.isEmpty()) {
+    private void displayAdvertisement() {
+        //TODO displaying
+        if (optimalVideoSet == null || optimalVideoSet.isEmpty()) {
             throw new NoVideoAvailableException();
         }
 
+        Collections.sort(optimalVideoSet, new Comparator<Advertisement>() {
+            @Override
+            public int compare(Advertisement o1, Advertisement o2) {
+                long l = o2.getAmountPerOneDisplaying() - o1.getAmountPerOneDisplaying();
+                return (int) (l != 0 ? l : o2.getDuration() - o1.getDuration());
+            }
+        });
+
+        for (Advertisement ad : optimalVideoSet) {
+            displayInPlayer(ad);
+            ad.revalidate();
+        }
+    }
+
+    private void displayInPlayer(Advertisement advertisement) {
+        //TODO get Player instance and display content
+        System.out.println(advertisement.getName() + " is displaying... " + advertisement.getAmountPerOneDisplaying() +
+                ", " + (1000 * advertisement.getAmountPerOneDisplaying() / advertisement.getDuration()));
     }
 }
