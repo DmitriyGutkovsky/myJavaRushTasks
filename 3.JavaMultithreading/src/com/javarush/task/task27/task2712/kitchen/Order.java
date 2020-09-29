@@ -14,23 +14,36 @@ public class Order {
         return dishes;
     }
 
+    public Tablet getTablet() {
+        return tablet;
+    }
+
+    protected void initDishes() throws IOException {
+        this.dishes = ConsoleHelper.getAllDishesForOrder();
+    }
+
     public Order(Tablet tablet) throws IOException {
         this.tablet = tablet;
-        dishes = ConsoleHelper.getAllDishesForOrder();
+        initDishes();
+        ConsoleHelper.writeMessage(toString());
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Your order: [");
-        if (dishes == null) return "";
-        else {
-            for (int i = 0; i < dishes.size() - 1; i++) {
-                sb.append(dishes.get(i)).append(", ");
-            }
+        StringBuilder result = new StringBuilder();
+        if (dishes.size() == 0) return result.toString();
+        result.append("Your order: [" + dishes.get(0));
+
+        for (int i = 1; i < dishes.size(); i++) {
+            result.append(", " + dishes.get(i).name());
         }
-        sb.append(dishes.get(dishes.size() - 1)).append("]").append(" of ").append(tablet.toString());
-        return sb.toString();
+        result.append("] of " + tablet);
+        result.append(", cooking time " + getTotalCookingTime() + "min");
+        return result.toString();
+    }
+
+    public boolean isEmpty() {
+        return dishes.isEmpty();
     }
 
     // подсчет времени приготовления всего заказа
@@ -38,8 +51,5 @@ public class Order {
         return dishes.stream().mapToInt(x -> x.getDuration()).sum();
     }
 
-    public boolean isEmpty() {
-        if (dishes.size() == 0) return true;
-        return false;
-    }
+
 }
