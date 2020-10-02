@@ -13,6 +13,7 @@ public class OrderManager implements Observer {
     private LinkedBlockingQueue<Order> orderQueue = new LinkedBlockingQueue<>();
 
     public OrderManager() {
+
         Thread thread = new Thread() {
             @Override
             public void run() {
