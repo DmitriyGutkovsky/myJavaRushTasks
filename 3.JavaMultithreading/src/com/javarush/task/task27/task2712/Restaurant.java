@@ -1,7 +1,6 @@
 package com.javarush.task.task27.task2712;
 
 import com.javarush.task.task27.task2712.kitchen.Cook;
-import com.javarush.task.task27.task2712.kitchen.Waiter;
 import com.javarush.task.task27.task2712.statistic.StatisticManager;
 
 import java.util.ArrayList;
@@ -21,10 +20,9 @@ public class Restaurant {
 
         StatisticManager.getInstance().register(cookDima);
         StatisticManager.getInstance().register(cookNastya);
-        
+        OrderManager orderManager = new OrderManager();
         for (Tablet tablet : tablets) {
-            tablet.addObserver(cookDima);
-            tablet.addObserver(cookNastya);
+            tablet.addObserver(orderManager);
         }
 
         Thread thread = new Thread(new RandomOrderGeneratorTask(tablets, ORDER_CREATING_INTERVAL));
