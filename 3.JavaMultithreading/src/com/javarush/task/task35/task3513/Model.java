@@ -1,15 +1,21 @@
 package com.javarush.task.task35.task3513;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 //будет содержать игровую логику и хранить игровое поле
 public class Model {
     private static final int FIELD_WIDTH = 4; // определяющая ширину игрового поля
     private Tile[][] gameTiles = new Tile[FIELD_WIDTH][FIELD_WIDTH];
+    public int score;
+    public int maxTile;
 
     public Model() {
         resetGameTiles();
+        score = 0;
+        maxTile = 0;
     }
 
     private List getEmptyTiles() {
@@ -43,4 +49,33 @@ public class Model {
         addTile();
     }
 
+    private void compressTiles(Tile[] tiles){
+        Arrays.sort(tiles, (o1, o2) -> o1.value == 0 ? 1 : o2.value > 0 ? 1 : -1);
+    }
+
+    private void mergeTiles(Tile[] tiles) {
+        LinkedList<Tile> tilesList = new LinkedList<>();
+        for (int i = 0; i < FIELD_WIDTH; i++) {
+            if (tiles[i].isEmpty()) {
+                continue;
+            }
+
+            if (i < FIELD_WIDTH - 1 && tiles[i].value == tiles[i + 1].value) {
+                int updatedValue = tiles[i].value * 2;
+                if (updatedValue > maxTile) {
+                    maxTile = updatedValue;
+                }
+                score += updatedValue;
+                tilesList.addLast(new Tile(updatedValue));
+                tiles[i + 1].value = 0;
+            } else {
+                tilesList.addLast(new Tile(tiles[i].value));
+            }
+            tiles[i].value = 0;
+        }
+
+        for (int i = 0; i < tilesList.size(); i++) {
+            tiles[i] = tilesList.get(i);
+        }
+    }
 }
