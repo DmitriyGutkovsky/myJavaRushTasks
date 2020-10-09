@@ -1,9 +1,6 @@
 package com.javarush.task.task35.task3513;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 //будет содержать игровую логику и хранить игровое поле
 public class Model {
@@ -11,6 +8,9 @@ public class Model {
     private Tile[][] gameTiles = new Tile[FIELD_WIDTH][FIELD_WIDTH];
     public int score;
     public int maxTile;
+    private Stack previousStates = new Stack(); //предыдущие состояния игрового поля
+    private Stack previousScores = new Stack(); //предыдущие состояния игрового счета
+    private boolean isSaveNeeded = true;
 
     public Model() {
         resetGameTiles();
@@ -169,5 +169,24 @@ public class Model {
             }
         }
         return false;
+    }
+
+    private void saveState(Tile[][] gameTiles) {
+        Tile[][] tiles = new Tile[gameTiles.length][gameTiles.length];
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles.length; j++) {
+                tiles[i][j] = gameTiles[i][j];
+            }
+        }
+        previousStates.push(tiles);
+        previousScores.push(score);
+        isSaveNeeded = false;
+    }
+
+    public void rollback() {
+        if (!previousStates.isEmpty() && !previousScores.isEmpty()) {
+            gameTiles = (Tile[][]) previousStates.pop();
+            score = (int) previousScores.pop();
+        }
     }
 }
