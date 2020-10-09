@@ -214,4 +214,28 @@ public class Model {
                 break;
         }
     }
+
+    /* будет возвращать true, в случае,
+    если вес плиток в массиве gameTiles отличается от веса плиток в верхнем массиве стека previousStates
+    */
+    public MoveEfficiency getMoveEfficiency(Move move) {
+        MoveEfficiency moveEfficiency = new MoveEfficiency(-1, 0, move);
+        move.move();
+        if (hasBoardChanged()) {
+            moveEfficiency = new MoveEfficiency(getEmptyTilesCount(), score, move);
+        }
+        rollback();
+        return moveEfficiency;
+    }
+
+    public boolean hasBoardChanged() {
+        for (int i = 0; i < FIELD_WIDTH; i++) {
+            for (int j = 0; j < FIELD_WIDTH; j++) {
+                if (gameTiles[i][j].value != ((Tile[][]) previousStates.peek())[i][j].value) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
