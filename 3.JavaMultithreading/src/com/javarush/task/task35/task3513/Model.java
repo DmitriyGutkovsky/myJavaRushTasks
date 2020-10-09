@@ -178,7 +178,7 @@ public class Model {
         return false;
     }
 
-    private void saveState(Tile[][] gameTiles ){
+    private void saveState(Tile[][] gameTiles) {
         Tile[][] tiles = new Tile[gameTiles.length][gameTiles.length];
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles.length; j++) {
@@ -190,10 +190,28 @@ public class Model {
         isSaveNeeded = false;
     }
 
-    public void rollback(){
+    public void rollback() {
         if (!previousStates.isEmpty() && !previousScores.isEmpty()) {
             gameTiles = (Tile[][]) previousStates.pop();
             score = (int) previousScores.pop();
+        }
+    }
+
+    public void randomMove() {
+        int n = ((int) (Math.random() * 100)) % 4;
+        switch (n) {
+            case 0:
+                left();
+                break;
+            case 1:
+                right();
+                break;
+            case 2:
+                up();
+                break;
+            case 3:
+                down();
+                break;
         }
     }
 }

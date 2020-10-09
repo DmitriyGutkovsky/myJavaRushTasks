@@ -44,6 +44,10 @@ public class Controller extends KeyAdapter {
         }
 
         if (view.isGameLost == false && view.isGameWon == false) {
+            if (e.getKeyCode() == KeyEvent.VK_R) {
+                model.randomMove();
+            }
+
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                 model.left();
             }
