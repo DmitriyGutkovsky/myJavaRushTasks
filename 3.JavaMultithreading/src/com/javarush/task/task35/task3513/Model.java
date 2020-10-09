@@ -4,8 +4,8 @@ import java.util.*;
 
 //будет содержать игровую логику и хранить игровое поле
 public class Model {
-    private static final int FIELD_WIDTH = 4; // определяющая ширину игрового поля
     private Tile[][] gameTiles = new Tile[FIELD_WIDTH][FIELD_WIDTH];
+    private static final int FIELD_WIDTH = 4; // определяющая ширину игрового поля
     public int score;
     public int maxTile;
     private Stack previousStates = new Stack(); //предыдущие состояния игрового поля
@@ -15,7 +15,7 @@ public class Model {
     public Model() {
         resetGameTiles();
         score = 0;
-        maxTile = 0;
+        maxTile = 2;
     }
 
     public Tile[][] getGameTiles() {
@@ -111,6 +111,9 @@ public class Model {
     }
 
     public void left() {
+        if (isSaveNeeded) {
+            saveState(gameTiles);
+        }
         boolean moveFlag = false;
         for (int i = 0; i < FIELD_WIDTH; i++) {
             if (compressTiles(gameTiles[i]) | mergeTiles(gameTiles[i])) {
@@ -120,9 +123,11 @@ public class Model {
         if (moveFlag) {
             addTile();
         }
+        isSaveNeeded = true;
     }
 
     public void right() {
+        saveState(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         left();
@@ -131,6 +136,7 @@ public class Model {
     }
 
     public void up() {
+        saveState(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
@@ -139,6 +145,7 @@ public class Model {
     }
 
     public void down() {
+        saveState(gameTiles);
         gameTiles = rotateClockwise(gameTiles);
         left();
         gameTiles = rotateClockwise(gameTiles);
@@ -171,11 +178,11 @@ public class Model {
         return false;
     }
 
-    private void saveState(Tile[][] gameTiles) {
+    private void saveState(Tile[][] gameTiles ){
         Tile[][] tiles = new Tile[gameTiles.length][gameTiles.length];
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles.length; j++) {
-                tiles[i][j] = gameTiles[i][j];
+                tiles[i][j] = new Tile(gameTiles[i][j].value);
             }
         }
         previousStates.push(tiles);
@@ -183,7 +190,7 @@ public class Model {
         isSaveNeeded = false;
     }
 
-    public void rollback() {
+    public void rollback(){
         if (!previousStates.isEmpty() && !previousScores.isEmpty()) {
             gameTiles = (Tile[][]) previousStates.pop();
             score = (int) previousScores.pop();
