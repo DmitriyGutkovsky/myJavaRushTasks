@@ -48,6 +48,10 @@ public class Controller extends KeyAdapter {
                 model.randomMove();
             }
 
+            if (e.getKeyCode() == KeyEvent.VK_A) {
+                model.autoMove();
+            }
+
             if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                 model.left();
             }
